@@ -88,6 +88,7 @@ void* word_puzzle_solver(void* id) {
             }
         }
     }
+    free(all->len_list);
 }
 
 void main(int argc, char** argv) {
@@ -100,7 +101,7 @@ void main(int argc, char** argv) {
         switch (opt) {
             case '1':
                 lengthOption = 1;
-    
+
                 tempList = (char*)malloc(sizeof(char) * (strlen(optarg) + 1));
 
                 strcpy(tempList, optarg);
@@ -194,12 +195,18 @@ void main(int argc, char** argv) {
         }
         // thread_info all [THREADS](void*)(all+ thread_number);
     }
+
     for (j = 0; j < thread_number; j++) {
         pthread_join(threadID[j], NULL);
         if (verbose) {
             fprintf(stderr, "Note: Thread %d joined!\n", j);
         }
     }
+
+    free(tempList);
+    free(lengthList);
+    free(buffer);
+    
     if (verbose) {
         fprintf(stderr, "Note: Total time: %ld nanoseconds using %d threads!\n",
                 get_nanos() - startTime, thread_number);
